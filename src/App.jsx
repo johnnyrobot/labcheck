@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -9,14 +9,51 @@ import StudentDashboard from './components/StudentDashboard';
 import RosterUpload from './components/RosterUpload';
 import ExportButton from './components/ExportButton';
 import ClearDataButton from './components/ClearDataButton';
-import UpdateNotification from './components/UpdateNotification';
+import UpdateAppButton from './components/UpdateAppButton';
+import UpdateAppModal from './components/UpdateAppModal';
 
 function App() {
   const [currentTab, setCurrentTab] = useState("dashboard");
   const [isRosterUploadOpen, setIsRosterUploadOpen] = useState(false);
+  const [isUpdateModalOpen, setUpdateModalOpen] = useState(false);
+  const [waitingWorker, setWaitingWorker] = useState(null);
+  const [isUpdateAvailable, setIsUpdateAvailable] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistration().then(registration => {
+        if (registration && registration.waiting) {
+          setWaitingWorker(registration.waiting);
+          setIsUpdateAvailable(true);
+        }
+        if (registration) {
+          registration.addEventListener('updatefound', () => {
+            const newWorker = registration.installing;
+            newWorker.addEventListener('statechange', () => {
+              if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                setWaitingWorker(newWorker);
+                setIsUpdateAvailable(true);
+              }
+            });
+          });
+        }
+      });
+    }
+  }, []);
 
   const handleRosterUploaded = () => {
     setCurrentTab("dashboard");
+  };
+
+  const handleUpdate = () => {
+    if (waitingWorker) {
+      waitingWorker.postMessage({ type: 'SKIP_WAITING' });
+      waitingWorker.addEventListener('statechange', () => {
+        if (waitingWorker.state === 'activated') {
+          window.location.reload();
+        }
+      });
+    }
   };
 
   return (
@@ -29,6 +66,9 @@ function App() {
           </h1>
           <p className="text-xl text-slate-600 font-medium">
             Modern Student Sign-In System
+          </p>
+          <p className="text-sm text-slate-500">
+            Version 8.24.25.0
           </p>
         </div>
 
@@ -100,6 +140,7 @@ function App() {
         <div className="flex justify-end items-center gap-4">
           <ExportButton />
           <ClearDataButton />
+          {isUpdateAvailable && <UpdateAppButton onClick={() => setUpdateModalOpen(true)} />}
         </div>
 
         {/* Roster Upload Modal */}
@@ -109,7 +150,11 @@ function App() {
           onRosterUploaded={handleRosterUploaded}
         />
         
-        <UpdateNotification />
+        <UpdateAppModal 
+          isOpen={isUpdateModalOpen}
+          onOpenChange={setUpdateModalOpen}
+          onConfirm={handleUpdate}
+        />
       </div>
     </div>
   );
