@@ -97,7 +97,7 @@ function App() {
         </Card>
 
         {/* Action Buttons */}
-        <div className="flex justify-end gap-4">
+        <div className="flex justify-end items-center gap-4">
           <ExportButton />
           <ClearDataButton />
         </div>

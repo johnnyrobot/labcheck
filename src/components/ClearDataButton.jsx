@@ -37,7 +37,6 @@ const ClearDataButton = () => {
   return (
     <>
       <Button 
-        variant="destructive" 
         onClick={handleOpen}
         className="flex items-center gap-2"
       >
@@ -46,7 +45,7 @@ const ClearDataButton = () => {
       </Button>
       
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="max-w-md">
+        <DialogContent className="max-w-md bg-white">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2 text-destructive">
               <AlertTriangle className="h-5 w-5" />
@@ -67,7 +66,7 @@ const ClearDataButton = () => {
             <Button variant="outline" onClick={handleClose}>
               Cancel
             </Button>
-            <Button variant="destructive" onClick={handleClearAllData}>
+            <Button className="bg-red-500 text-white" onClick={handleClearAllData}>
               Clear All Data
             </Button>
           </DialogFooter>

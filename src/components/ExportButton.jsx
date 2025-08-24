@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Button, Box } from '@mui/material';
+import { Button } from "@/components/ui/button";
 import localforage from 'localforage';
 import Papa from 'papaparse';
 import JSZip from 'jszip';
@@ -49,11 +49,9 @@ const ExportButton = () => {
   };
 
   return (
-    <Box sx={{ mt: 4 }}>
-      <Button variant="contained" color="primary" onClick={handleExport}>
-        Export Data
-      </Button>
-    </Box>
+    <Button onClick={handleExport}>
+      Export Data
+    </Button>
   );
 };
 

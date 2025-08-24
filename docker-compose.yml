@@ -20,9 +20,4 @@ services:
     # volumes:
       # Optional: Mount for logs (uncomment if needed)
       # - ./logs:/var/log/nginx
-    networks:
-      - labcheck-network
 
-networks:
-  labcheck-network:
-    external: true

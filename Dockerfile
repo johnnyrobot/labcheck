@@ -9,7 +9,7 @@ COPY package.json package-lock.json ./
 RUN npm ci --silent
 
 # Copy source code
-COPY . ./ 
+COPY . . 
 
 # Build the application
 RUN npm run build
