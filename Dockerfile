@@ -1,5 +1,5 @@
 # Build environment
-FROM node:18-alpine as build
+FROM node:20-alpine as build
 WORKDIR /app
 
 # Copy package files first for better caching
@@ -9,7 +9,7 @@ COPY package.json package-lock.json ./
 RUN npm ci --silent
 
 # Copy source code
-COPY . ./
+COPY . ./ 
 
 # Build the application
 RUN npm run build
