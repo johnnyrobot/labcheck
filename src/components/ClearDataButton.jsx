@@ -39,7 +39,7 @@ const ClearDataButton = () => {
       <Button 
         variant="destructive" 
         onClick={handleOpen}
-        className="flex items-center gap-2"
+        className="flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white"
       >
         <RotateCcw className="h-4 w-4" />
         Start New Session
@@ -60,6 +60,9 @@ const ClearDataButton = () => {
                 <li>All sign-in records</li>
               </ul>
               <p className="mt-3 font-medium">This action cannot be undone.</p>
+              <p className="mt-3 font-semibold text-amber-600">
+                Please make sure you have exported any necessary data before proceeding.
+              </p>
             </DialogDescription>
           </DialogHeader>
           
