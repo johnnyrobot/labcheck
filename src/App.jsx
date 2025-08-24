@@ -9,6 +9,7 @@ import StudentDashboard from './components/StudentDashboard';
 import RosterUpload from './components/RosterUpload';
 import ExportButton from './components/ExportButton';
 import ClearDataButton from './components/ClearDataButton';
+import UpdateNotification from './components/UpdateNotification';
 
 function App() {
   const [currentTab, setCurrentTab] = useState("dashboard");
@@ -107,6 +108,8 @@ function App() {
           handleClose={() => setIsRosterUploadOpen(false)}
           onRosterUploaded={handleRosterUploaded}
         />
+        
+        <UpdateNotification />
       </div>
     </div>
   );
