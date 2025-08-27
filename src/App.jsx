@@ -70,7 +70,7 @@ function App() {
             Modern Student Sign-In System
           </p>
           <p className="text-sm text-slate-500">
-            Version 8.26.25.0
+            Version 8.27.25.0
           </p>
         </div>
 
