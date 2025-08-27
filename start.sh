@@ -1,32 +1,39 @@
 #!/bin/sh
 
-echo "--- STARTUP SCRIPT ---"
-echo "Date: $(date)"
-echo "Hostname: $(hostname)"
-echo "---"
+# Coolify-compatible startup script for LabCheck PWA
+# This script helps debug startup issues and ensures proper nginx configuration
 
-echo "--- FILE SYSTEM CHECK ---"
-echo "Checking for built files in /usr/share/nginx/html..."
+echo "🚀 Starting LabCheck PWA..."
+echo "📅 $(date)"
+echo "🐳 Container: $(hostname)"
+
+# Check if built files exist
 if [ ! -f "/usr/share/nginx/html/index.html" ]; then
-    echo "ERROR: index.html not found!"
-    echo "Contents of /usr/share/nginx/html:"
+    echo "❌ ERROR: Built files not found in /usr/share/nginx/html/"
+    echo "📁 Contents of /usr/share/nginx/html/:"
     ls -la /usr/share/nginx/html/
     exit 1
-else
-    echo "SUCCESS: index.html found."
 fi
-echo "---"
 
-echo "--- NGINX CONFIG CHECK ---"
-echo "Testing Nginx configuration..."
+echo "✅ Built files found"
+
+# Check nginx configuration
+echo "🔧 Generating nginx configuration..."
+envsubst '${SERVICE_FQDN_LABCHECK_PWA}' < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf.d/default.conf
+
+echo "🔧 Testing nginx configuration..."
 nginx -t
 if [ $? -ne 0 ]; then
-    echo "ERROR: Nginx configuration test failed."
+    echo "❌ ERROR: nginx configuration test failed"
     exit 1
-else
-    echo "SUCCESS: Nginx configuration is valid."
 fi
-echo "---"
 
-echo "--- STARTING NGINX ---"
+echo "✅ nginx configuration is valid"
+
+# Check file permissions
+echo "🔐 Checking file permissions..."
+ls -la /usr/share/nginx/html/
+
+# Start nginx in foreground
+echo "🌐 Starting nginx..."
 exec nginx -g "daemon off;"

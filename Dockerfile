@@ -20,11 +20,14 @@ RUN ls -la dist/ && echo "Build completed successfully"
 # Production environment
 FROM nginx:stable-alpine
 
+# Install curl for health checks and gettext for envsubst
+RUN apk add --no-cache curl gettext
+
 # Copy built application
 COPY --from=build /app/dist /usr/share/nginx/html
 
-# Copy nginx configuration
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+# Copy nginx configuration template
+COPY default.conf.template /etc/nginx/conf.d/default.conf.template
 
 # Copy startup script
 COPY start.sh /start.sh
@@ -39,6 +42,10 @@ RUN mkdir -p /var/cache/nginx /var/log/nginx /var/run/nginx && \
 
 # Expose port 80
 EXPOSE 80
+
+# Health check for Coolify (simplified)
+#HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=5 \
+#    CMD curl -f http://localhost/health || exit 1
 
 # Use startup script
 CMD ["/start.sh"]
