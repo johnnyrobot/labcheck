@@ -145,7 +145,7 @@ const StudentDashboard = () => {
         </div>
         <div className="flex items-center gap-2">
           <Button 
-            variant={viewMode === 'card' ? 'secondary' : 'outline'} 
+            variant={viewMode === 'list' ? 'secondary' : 'outline'} 
             size="sm"
             onClick={() => setViewMode('card')}
           >
@@ -153,7 +153,7 @@ const StudentDashboard = () => {
             Card View
           </Button>
           <Button 
-            variant={viewMode === 'list' ? 'secondary' : 'outline'} 
+            variant={viewMode === 'card' ? 'secondary' : 'outline'} 
             size="sm"
             onClick={() => setViewMode('list')}
           >
@@ -230,7 +230,7 @@ const StudentDashboard = () => {
                         : status === 'not-signed-in'
                         ? 'bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white'
                         : ''
-                    }`}
+                    } ${status === 'signed-out' ? 'w-full px-4' : ''}`}
                   >
                     {getButtonText(status)}
                   </Button>
@@ -289,7 +289,7 @@ const StudentDashboard = () => {
                           : status === 'not-signed-in'
                           ? 'bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white'
                           : ''
-                      }`}
+                      } ${status === 'signed-out' ? 'w-32 px-4' : ''}`}
                     >
                       {getButtonText(status)}
                     </Button>
@@ -314,7 +314,7 @@ const StudentDashboard = () => {
       {/* Sign Out Confirmation Modal */}
       {selectedStudent && isSignOutConfirmOpen && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <Card className="w-full max-w-md mx-4">
+          <Card className="w-full max-w-md mx-4 bg-white">
             <CardHeader>
               <CardTitle>Confirm Sign Out</CardTitle>
             </CardHeader>
@@ -326,6 +326,7 @@ const StudentDashboard = () => {
                 </Button>
                 <Button 
                   variant="destructive"
+                  className="bg-red-600 text-white hover:bg-red-700"
                   onClick={handleConfirmSignOut}
                 >
                   Sign Out
@@ -337,7 +338,7 @@ const StudentDashboard = () => {
       )}
 
       {/* Sign Out Modal */}
-      {selectedStudent && (
+      {selectedStudent && isSignOutModalOpen && (
         <SignOutModal
           open={isSignOutModalOpen}
           handleClose={handleCloseModals}
