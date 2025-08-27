@@ -44,8 +44,8 @@ RUN mkdir -p /var/cache/nginx /var/log/nginx /var/run/nginx && \
 EXPOSE 80
 
 # Health check for Coolify (simplified)
-HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=5 \
-    CMD curl -f http://localhost/health || exit 1
+#HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=5 \
+#    CMD curl -f http://localhost/health || exit 1
 
 # Use startup script
 CMD ["/start.sh"]
