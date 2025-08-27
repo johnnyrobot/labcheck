@@ -15,6 +15,7 @@ import UpdateAppModal from './components/UpdateAppModal';
 function App() {
   const [currentTab, setCurrentTab] = useState("dashboard");
   const [isRosterUploadOpen, setIsRosterUploadOpen] = useState(false);
+  const [rosterKey, setRosterKey] = useState(0);
   const [isUpdateModalOpen, setUpdateModalOpen] = useState(false);
   const [waitingWorker, setWaitingWorker] = useState(null);
   const [isUpdateAvailable, setIsUpdateAvailable] = useState(false);
@@ -43,6 +44,7 @@ function App() {
 
   const handleRosterUploaded = () => {
     setCurrentTab("dashboard");
+    setRosterKey(prevKey => prevKey + 1);
   };
 
   const handleUpdate = () => {
@@ -68,7 +70,7 @@ function App() {
             Modern Student Sign-In System
           </p>
           <p className="text-sm text-slate-500">
-            Version 8.24.25.0
+            Version 8.26.25.0
           </p>
         </div>
 
@@ -126,7 +128,7 @@ function App() {
               </TabsList>
               
               <TabsContent value="dashboard" className="mt-0">
-                <StudentDashboard />
+                <StudentDashboard key={rosterKey} />
               </TabsContent>
               
               <TabsContent value="manual" className="mt-0">
