@@ -49,12 +49,12 @@ function App() {
 
   const handleUpdate = () => {
     if (waitingWorker) {
-      waitingWorker.postMessage({ type: 'SKIP_WAITING' });
       waitingWorker.addEventListener('statechange', () => {
         if (waitingWorker.state === 'activated') {
           window.location.reload();
         }
       });
+      waitingWorker.postMessage({ type: 'SKIP_WAITING' });
     }
   };
 
