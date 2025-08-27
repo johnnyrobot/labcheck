@@ -1,0 +1,48 @@
+server {
+    listen 80;
+    server_name ${SERVICE_FQDN_LABCHECK_PWA};
+    root /usr/share/nginx/html;
+    index index.html;
+
+    # Basic gzip compression
+    gzip on;
+    gzip_types text/plain text/css application/json application/javascript text/xml application/xml application/xml+rss text/javascript;
+
+    # Basic caching for static assets
+    location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2)$ {
+        expires 1d;
+        add_header Cache-Control "public";
+    }
+
+    # Service worker - no cache
+    location /sw.js {
+        expires -1;
+        add_header Cache-Control "no-cache, no-store, must-revalidate";
+    }
+
+    # PWA manifest
+    location /manifest.json {
+        expires 1h;
+        add_header Cache-Control "public";
+    }
+
+    # Handle SPA routing - serve index.html for all routes
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+
+    # Simple health check for Coolify
+    location /health {
+        access_log off;
+        return 200 "OK";
+        add_header Content-Type text/plain;
+    }
+
+    # Nginx status for monitoring
+    location /nginx_status {
+        stub_status on;
+        access_log off;
+        allow 127.0.0.1;
+        deny all;
+    }
+}

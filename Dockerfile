@@ -26,8 +26,8 @@ RUN apk add --no-cache curl
 # Copy built application
 COPY --from=build /app/dist /usr/share/nginx/html
 
-# Copy nginx configuration
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+# Copy nginx configuration template
+COPY default.conf.template /etc/nginx/conf.d/default.conf.template
 
 # Copy startup script
 COPY start.sh /start.sh

@@ -18,6 +18,9 @@ fi
 echo "✅ Built files found"
 
 # Check nginx configuration
+echo "🔧 Generating nginx configuration..."
+envsubst '${SERVICE_FQDN_LABCHECK_PWA}' < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf.d/default.conf
+
 echo "🔧 Testing nginx configuration..."
 nginx -t
 if [ $? -ne 0 ]; then
