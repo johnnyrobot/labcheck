@@ -13,6 +13,9 @@ const ExportButton = () => {
 
     if (students) {
       const csvData = students.map(student => ({
+        'Class': classDetails?.className,
+        'Week': classDetails?.classWeek,
+        'Day': classDetails?.classDay,
         'Student Name': student.name,
         'Student ID': student.id,
         'Time In': student.timeIn,
