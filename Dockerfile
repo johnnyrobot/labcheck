@@ -20,8 +20,8 @@ RUN ls -la dist/ && echo "Build completed successfully"
 # Production environment
 FROM nginx:stable-alpine
 
-# Install curl for health checks
-RUN apk add --no-cache curl
+# Install curl for health checks and gettext for envsubst
+RUN apk add --no-cache curl gettext
 
 # Copy built application
 COPY --from=build /app/dist /usr/share/nginx/html
