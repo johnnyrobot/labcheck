@@ -2,9 +2,6 @@ version: '3.8'
 services:
   labcheck-pwa:
     build: .
-    container_name: labcheck-app
-    ports:
-      - "1738:80"
     restart: unless-stopped
     environment:
       - NGINX_ENVSUBST_OUTPUT_DIR=/etc/nginx/conf.d
@@ -20,4 +17,3 @@ services:
     # volumes:
       # Optional: Mount for logs (uncomment if needed)
       # - ./logs:/var/log/nginx
-
