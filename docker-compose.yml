@@ -11,12 +11,12 @@ services:
     labels:
       - "com.docker.compose.service=labcheck-pwa"
       - "description=LabCheck Progressive Web App - Student Sign-In System"
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
+    # healthcheck:
+    #   test: ["CMD", "curl", "-f", "http://localhost/health"]
+    #   interval: 30s
+    #   timeout: 10s
+    #   retries: 3
+    #   start_period: 40s
     # volumes:
       # Optional: Mount for logs (uncomment if needed)
       # - ./logs:/var/log/nginx
