@@ -142,10 +142,7 @@ function App() {
         <div className="flex justify-end items-center gap-4">
           <ExportButton />
           <ClearDataButton />
-          <UpdateAppButton 
-            onClick={() => setUpdateModalOpen(true)} 
-            isUpdateAvailable={isUpdateAvailable} 
-          />
+          {isUpdateAvailable && <UpdateAppButton onClick={() => setUpdateModalOpen(true)} />}
         </div>
 
         {/* Roster Upload Modal */}
