@@ -12,10 +12,13 @@ const ExportButton = () => {
     const classDetails = await localforage.getItem('classDetails');
 
     if (students) {
+      let csvContent = '';
+      if (classDetails) {
+        const header = `Class: ${classDetails.className}, Week: ${classDetails.classWeek}, Day: ${classDetails.classDay}\n`;
+        csvContent += header;
+      }
+
       const csvData = students.map(student => ({
-        'Class': classDetails?.className,
-        'Week': classDetails?.classWeek,
-        'Day': classDetails?.classDay,
         'Student Name': student.name,
         'Student ID': student.id,
         'Time In': student.timeIn,
@@ -23,7 +26,8 @@ const ExportButton = () => {
       }));
 
       const csv = Papa.unparse(csvData);
-      zip.file('sign_in_sheet.csv', csv);
+      csvContent += csv;
+      zip.file('sign_in_sheet.csv', csvContent);
 
       const signaturesFolder = zip.folder('signatures');
       students.forEach(student => {
