@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import { useState } from 'react';
+import { useRegisterSW } from 'virtual:pwa-register/react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -17,30 +18,11 @@ function App() {
   const [isRosterUploadOpen, setIsRosterUploadOpen] = useState(false);
   const [rosterKey, setRosterKey] = useState(0);
   const [isUpdateModalOpen, setUpdateModalOpen] = useState(false);
-  const [waitingWorker, setWaitingWorker] = useState(null);
-  const [isUpdateAvailable, setIsUpdateAvailable] = useState(false);
 
-  useEffect(() => {
-    if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
-      navigator.serviceWorker.getRegistration().then(registration => {
-        if (registration && registration.waiting) {
-          setWaitingWorker(registration.waiting);
-          setIsUpdateAvailable(true);
-        }
-        if (registration) {
-          registration.addEventListener('updatefound', () => {
-            const newWorker = registration.installing;
-            newWorker.addEventListener('statechange', () => {
-              if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                setWaitingWorker(newWorker);
-                setIsUpdateAvailable(true);
-              }
-            });
-          });
-        }
-      });
-    }
-  }, []);
+  const {
+    needRefresh: [needRefresh],
+    updateServiceWorker,
+  } = useRegisterSW();
 
   const handleRosterUploaded = () => {
     setCurrentTab("dashboard");
@@ -48,14 +30,7 @@ function App() {
   };
 
   const handleUpdate = () => {
-    if (waitingWorker) {
-      waitingWorker.addEventListener('statechange', () => {
-        if (waitingWorker.state === 'activated') {
-          window.location.reload();
-        }
-      });
-      waitingWorker.postMessage({ type: 'SKIP_WAITING' });
-    }
+    updateServiceWorker(true);
   };
 
   return (
@@ -142,9 +117,9 @@ function App() {
         <div className="flex justify-end items-center gap-4">
           <ExportButton />
           <ClearDataButton />
-          <UpdateAppButton 
-            onClick={() => setUpdateModalOpen(true)} 
-            isUpdateAvailable={isUpdateAvailable} 
+          <UpdateAppButton
+            onClick={() => setUpdateModalOpen(true)}
+            isUpdateAvailable={needRefresh}
           />
         </div>
 
