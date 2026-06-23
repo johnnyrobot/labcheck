@@ -26,4 +26,19 @@ export default defineConfig([
       'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }],
     },
   },
+  {
+    // shadcn/ui components intentionally co-locate the component with its
+    // class-variance-authority variants export; Fast Refresh warning is moot.
+    files: ['src/components/ui/**/*.{js,jsx}'],
+    rules: {
+      'react-refresh/only-export-components': 'off',
+    },
+  },
+  {
+    // Build/tooling config files are loaded in a Node (CJS) context by Vite.
+    files: ['**/*.config.js'],
+    languageOptions: {
+      globals: globals.node,
+    },
+  },
 ])

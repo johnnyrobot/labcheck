@@ -55,11 +55,6 @@ const SignInTable = () => {
     setIsSignOutModalOpen(true);
   };
 
-  const handleOpenSignOutModal = student => {
-    setCurrentStudent(student);
-    setIsSignOutModalOpen(true);
-  };
-
   const handleCloseSignOutModal = () => {
     setCurrentStudent(null);
     setIsSignOutModalOpen(false);
