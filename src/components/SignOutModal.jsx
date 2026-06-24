@@ -4,6 +4,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -31,10 +32,10 @@ const SignOutModal = ({ open, handleClose, handleSignOut, student }) => {
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Sign Out</DialogTitle>
+          <DialogDescription>
+            Signing out: {student && student.name}
+          </DialogDescription>
         </DialogHeader>
-        <p className="text-sm text-muted-foreground">
-          Signing out: {student && student.name}
-        </p>
         <div className="rounded-md border border-input">
           <SignaturePad ref={sigCanvas} options={{ penColor: 'black' }} />
         </div>
