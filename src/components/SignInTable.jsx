@@ -1,18 +1,21 @@
-
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Table,
   TableBody,
   TableCell,
-  TableContainer,
   TableHead,
+  TableHeader,
   TableRow,
-  Paper,
-  Button,
-  Box,
-  Modal,
-  Typography,
-} from '@mui/material';
+} from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import localforage from 'localforage';
 import SignInModal from './SignInModal';
 import SignOutModal from './SignOutModal';
@@ -25,55 +28,39 @@ const SignInTable = () => {
   const [currentStudent, setCurrentStudent] = useState(null);
 
   useEffect(() => {
-    localforage.getItem('students').then(data => {
-      if (data) {
-        setStudents(data);
-      }
+    localforage.getItem('students').then((data) => {
+      if (data) setStudents(data);
     });
   }, []);
 
-  const handleOpenSignInModal = () => {
-    setIsSignInModalOpen(true);
-  };
+  const handleOpenSignInModal = () => setIsSignInModalOpen(true);
+  const handleCloseSignInModal = () => setIsSignInModalOpen(false);
 
-  const handleCloseSignInModal = () => {
-    setIsSignInModalOpen(false);
-  };
-
-  const handleOpenSignOutConfirmationModal = student => {
+  const handleOpenSignOutConfirmationModal = (student) => {
     setCurrentStudent(student);
     setIsSignOutConfirmationModalOpen(true);
   };
-
   const handleCloseSignOutConfirmationModal = () => {
     setCurrentStudent(null);
     setIsSignOutConfirmationModalOpen(false);
   };
-
   const handleConfirmSignOut = () => {
     setIsSignOutConfirmationModalOpen(false);
     setIsSignOutModalOpen(true);
   };
-
-  const handleOpenSignOutModal = student => {
-    setCurrentStudent(student);
-    setIsSignOutModalOpen(true);
-  };
-
   const handleCloseSignOutModal = () => {
     setCurrentStudent(null);
     setIsSignOutModalOpen(false);
   };
 
-  const handleSignIn = studentData => {
-    console.log('Adding new student:', studentData);
+  const handleSignIn = (studentData) => {
     const newStudents = [...students, studentData];
     setStudents(newStudents);
     localforage.setItem('students', newStudents);
   };
 
-  const handleSignOut = studentData => {
-    const newStudents = students.map(s =>
+  const handleSignOut = (studentData) => {
+    const newStudents = students.map((s) =>
       s.id === studentData.id ? studentData : s
     );
     setStudents(newStudents);
@@ -81,15 +68,17 @@ const SignInTable = () => {
   };
 
   return (
-    <Box>
-      <Button variant="contained" sx={{ mb: 2 }} onClick={handleOpenSignInModal}>
+    <div>
+      <Button className="mb-4" onClick={handleOpenSignInModal}>
         Sign In
       </Button>
+
       <SignInModal
         open={isSignInModalOpen}
         handleClose={handleCloseSignInModal}
         handleSignIn={handleSignIn}
       />
+
       {currentStudent && (
         <SignOutModal
           open={isSignOutModalOpen}
@@ -98,44 +87,42 @@ const SignInTable = () => {
           student={currentStudent}
         />
       )}
-      <Modal
+
+      <Dialog
         open={isSignOutConfirmationModalOpen}
-        onClose={handleCloseSignOutConfirmationModal}
-        aria-labelledby="sign-out-confirmation-modal-title"
-        aria-describedby="sign-out-confirmation-modal-description"
+        onOpenChange={(o) => !o && handleCloseSignOutConfirmationModal()}
       >
-        <Box sx={style}>
-          <Typography id="sign-out-confirmation-modal-title" variant="h6" component="h2">
-            Confirm Sign Out
-          </Typography>
-          <Typography id="sign-out-confirmation-modal-description" sx={{ mt: 2 }}>
-            Are you sure you want to sign out {currentStudent && currentStudent.name}?
-          </Typography>
-          <Box sx={{ mt: 2 }}>
-            <Button onClick={handleCloseSignOutConfirmationModal} sx={{ mr: 1 }}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Confirm Sign Out</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to sign out {currentStudent && currentStudent.name}?
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={handleCloseSignOutConfirmationModal}>
               Cancel
             </Button>
-            <Button onClick={handleConfirmSignOut} variant="contained" color="secondary">
-              Sign Out
-            </Button>
-          </Box>
-        </Box>
-      </Modal>
-      <TableContainer component={Paper}>
+            <Button onClick={handleConfirmSignOut}>Sign Out</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <div className="rounded-md border overflow-x-auto">
         <Table>
-          <TableHead>
+          <TableHeader>
             <TableRow>
-              <TableCell>Student Name</TableCell>
-              <TableCell>Student ID</TableCell>
-              <TableCell>Time In</TableCell>
-              <TableCell>Signature In</TableCell>
-              <TableCell>Time Out</TableCell>
-              <TableCell>Signature Out</TableCell>
-              <TableCell>Action</TableCell>
+              <TableHead>Student Name</TableHead>
+              <TableHead>Student ID</TableHead>
+              <TableHead>Time In</TableHead>
+              <TableHead>Signature In</TableHead>
+              <TableHead>Time Out</TableHead>
+              <TableHead>Signature Out</TableHead>
+              <TableHead>Action</TableHead>
             </TableRow>
-          </TableHead>
+          </TableHeader>
           <TableBody>
-            {students.map(student => (
+            {students.map((student) => (
               <TableRow key={student.id}>
                 <TableCell>{student.name}</TableCell>
                 <TableCell>{student.id}</TableCell>
@@ -154,8 +141,7 @@ const SignInTable = () => {
                 <TableCell>
                   {!student.timeOut && (
                     <Button
-                      variant="contained"
-                      color="secondary"
+                      variant="secondary"
                       onClick={() => handleOpenSignOutConfirmationModal(student)}
                     >
                       Sign Out
@@ -166,21 +152,9 @@ const SignInTable = () => {
             ))}
           </TableBody>
         </Table>
-      </TableContainer>
-    </Box>
+      </div>
+    </div>
   );
-};
-
-const style = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 400,
-  bgcolor: 'background.paper',
-  border: '2px solid #000',
-  boxShadow: 24,
-  p: 4,
 };
 
 export default SignInTable;

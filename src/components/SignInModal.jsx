@@ -1,35 +1,25 @@
-
-import React, { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import {
-  Modal,
-  Box,
-  Typography,
-  TextField,
-  Button,
-} from '@mui/material';
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import SignaturePad from 'react-signature-pad-wrapper';
 import localforage from 'localforage';
-
-const style = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 400,
-  bgcolor: 'background.paper',
-  border: '2px solid #000',
-  boxShadow: 24,
-  p: 4,
-};
 
 const SignInModal = ({ open, handleClose, handleSignIn, prefilledStudent }) => {
   const [name, setName] = useState('');
   const [studentId, setStudentId] = useState('');
   const [error, setError] = useState('');
-  const sigCanvas = useRef({});
+  const sigCanvas = useRef(null);
 
-  // Update form when prefilledStudent changes
-  React.useEffect(() => {
+  useEffect(() => {
     if (prefilledStudent) {
       setName(prefilledStudent.name);
       setStudentId(prefilledStudent.id);
@@ -41,19 +31,18 @@ const SignInModal = ({ open, handleClose, handleSignIn, prefilledStudent }) => {
   }, [prefilledStudent, open]);
 
   const clearSignature = () => {
-    sigCanvas.current.clear();
+    sigCanvas.current?.clear();
   };
 
   const saveSignature = async () => {
-    const students = await localforage.getItem('students') || [];
-    const studentExists = students.some(student => student.id === studentId);
+    const students = (await localforage.getItem('students')) || [];
+    const studentExists = students.some((student) => student.id === studentId);
 
     if (studentExists) {
       setError('A student with this ID has already signed in.');
     } else if (!name || !studentId) {
       setError('Please enter both name and student ID.');
     } else {
-      console.log('Signing in student:', { name, id: studentId });
       handleSignIn({
         name,
         id: studentId,
@@ -69,48 +58,47 @@ const SignInModal = ({ open, handleClose, handleSignIn, prefilledStudent }) => {
   };
 
   return (
-    <Modal open={open} onClose={handleClose}>
-      <Box sx={style}>
-        <Typography variant="h6" component="h2">
-          Sign In
-        </Typography>
-        <TextField
-          label="Student Name"
-          value={name}
-          onChange={e => setName(e.target.value)}
-          fullWidth
-          sx={{ mt: 2 }}
-          disabled={!!prefilledStudent}
-        />
-        <TextField
-          label="Student ID"
-          value={studentId}
-          onChange={e => setStudentId(e.target.value)}
-          fullWidth
-          sx={{ mt: 2, mb: 2 }}
-          disabled={!!prefilledStudent}
-        />
-        {error && (
-          <Typography color="error" sx={{ mb: 2 }}>
-            {error}
-          </Typography>
-        )}
-        <Box sx={{ border: '1px solid black' }}>
-          <SignaturePad
-            ref={sigCanvas}
-            options={{ penColor: 'black' }}
-          />
-        </Box>
-        <Box sx={{ mt: 2 }}>
-          <Button onClick={clearSignature} sx={{ mr: 1 }}>
+    <Dialog open={open} onOpenChange={(o) => !o && handleClose()}>
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle>Sign In</DialogTitle>
+        </DialogHeader>
+        <div className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="signin-name">Student Name</Label>
+            <Input
+              id="signin-name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              disabled={!!prefilledStudent}
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="signin-id">Student ID</Label>
+            <Input
+              id="signin-id"
+              value={studentId}
+              onChange={(e) => setStudentId(e.target.value)}
+              disabled={!!prefilledStudent}
+            />
+          </div>
+          {error && (
+            <Alert variant="destructive">
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          )}
+          <div className="rounded-md border border-input">
+            <SignaturePad ref={sigCanvas} options={{ penColor: 'black' }} />
+          </div>
+        </div>
+        <DialogFooter>
+          <Button variant="outline" onClick={clearSignature}>
             Clear
           </Button>
-          <Button onClick={saveSignature} variant="contained">
-            Sign In
-          </Button>
-        </Box>
-      </Box>
-    </Modal>
+          <Button onClick={saveSignature}>Sign In</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 };
 
