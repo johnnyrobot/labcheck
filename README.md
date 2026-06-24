@@ -135,10 +135,10 @@ Jane Smith,67890
 ## 🛠️ Technology Stack
 
 ### Frontend
-- **React 18** - Modern React with hooks
+- **React 19** - Modern React with hooks, Actions, and ref-as-prop
 - **Vite** - Fast build tool and dev server
 - **shadcn/ui** - Beautiful, accessible UI components
-- **Tailwind CSS v4** - Utility-first CSS framework
+- **Tailwind CSS v4** - Utility-first CSS framework (CSS-first config in `src/index.css`)
 - **Lucide React** - Beautiful icons
 
 ### PWA & Storage
