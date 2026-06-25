@@ -10,7 +10,16 @@ lerna-debug.log*
 node_modules
 dist
 dist-ssr
+dev-dist
 *.local
+
+# Environment files (keep .env.example tracked)
+.env
+.env.*
+!.env.example
+
+# Internal/working docs (not for public distribution)
+docs/
 
 # Editor directories and files
 .vscode/*
