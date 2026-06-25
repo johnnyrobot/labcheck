@@ -1,0 +1,57 @@
+name: Bug report
+description: Report something that isn't working as expected
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to file a bug report. Please do **not** report
+        security vulnerabilities here — see our
+        [Security Policy](https://github.com/johnnyrobot/labcheck/security/policy).
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: A clear description of the bug and what you expected to happen.
+      placeholder: When I click X, Y happens, but I expected Z.
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      description: How can we reproduce the issue?
+      placeholder: |
+        1. Go to '...'
+        2. Click on '...'
+        3. See error
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version / commit
+      description: Which version or commit are you running?
+      placeholder: "1.0.0"
+    validations:
+      required: false
+  - type: dropdown
+    id: environment
+    attributes:
+      label: Environment
+      description: Where did you see this?
+      options:
+        - Desktop browser
+        - Mobile browser
+        - Installed PWA
+        - Docker / self-hosted
+    validations:
+      required: false
+  - type: textarea
+    id: console
+    attributes:
+      label: Console errors / screenshots
+      description: Paste any browser console output or attach screenshots.
+    validations:
+      required: false
