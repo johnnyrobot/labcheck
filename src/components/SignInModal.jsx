@@ -36,26 +36,35 @@ const SignInModal = ({ open, handleClose, handleSignIn, prefilledStudent }) => {
   };
 
   const saveSignature = async () => {
+    if (!name || !studentId) {
+      setError('Please enter both name and student ID.');
+      return;
+    }
+
+    if (sigCanvas.current?.isEmpty()) {
+      setError('Please provide a signature before signing in.');
+      return;
+    }
+
     const students = (await localforage.getItem('students')) || [];
     const studentExists = students.some((student) => student.id === studentId);
 
     if (studentExists) {
       setError('A student with this ID has already signed in.');
-    } else if (!name || !studentId) {
-      setError('Please enter both name and student ID.');
-    } else {
-      handleSignIn({
-        name,
-        id: studentId,
-        timeIn: new Date().toLocaleString(),
-        signatureIn: sigCanvas.current.toDataURL(),
-      });
-      setName('');
-      setStudentId('');
-      setError('');
-      clearSignature();
-      handleClose();
+      return;
     }
+
+    handleSignIn({
+      name,
+      id: studentId,
+      timeIn: new Date().toLocaleString(),
+      signatureIn: sigCanvas.current.toDataURL(),
+    });
+    setName('');
+    setStudentId('');
+    setError('');
+    clearSignature();
+    handleClose();
   };
 
   return (

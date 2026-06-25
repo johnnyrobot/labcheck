@@ -59,21 +59,19 @@ const RosterUpload = ({ open, handleClose, onRosterUploaded }) => {
           return;
         }
 
-        // Process and normalize the data
-        const processedData = results.data.map((row, index) => {
+        // Process and normalize the data. Incomplete rows are skipped via the
+        // filter below rather than thrown, so the user-facing empty-result
+        // handling stays reachable inside this complete callback.
+        const processedData = results.data.map((row) => {
           const normalizedRow = {};
           Object.keys(row).forEach(key => {
             const normalizedKey = key.toLowerCase().trim();
             if (normalizedKey.includes('name')) {
-              normalizedRow.name = row[key].trim();
+              normalizedRow.name = (row[key] ?? '').trim();
             } else if (normalizedKey.includes('id')) {
-              normalizedRow.id = row[key].trim();
+              normalizedRow.id = (row[key] ?? '').trim();
             }
           });
-
-          if (!normalizedRow.name || !normalizedRow.id) {
-            throw new Error(`Row ${index + 1} is missing name or ID`);
-          }
 
           return normalizedRow;
         }).filter(row => row.name && row.id);

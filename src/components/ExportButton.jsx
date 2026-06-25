@@ -48,10 +48,17 @@ const ExportButton = () => {
 
     zip.generateAsync({ type: 'blob' }).then(content => {
       const link = document.createElement('a');
-      link.href = URL.createObjectURL(content);
-      const fileName = classDetails ? `${classDetails.className}_Week${classDetails.classWeek}_Day${classDetails.classDay}.zip` : 'lab_check_export.zip';
+      const url = URL.createObjectURL(content);
+      link.href = url;
+      // Strip characters that are unsafe in filenames before interpolating
+      // the user-controlled class details into the download name.
+      const safe = (value) => String(value ?? '').replace(/[^a-z0-9_-]+/gi, '_');
+      const fileName = classDetails
+        ? `${safe(classDetails.className)}_Week${safe(classDetails.classWeek)}_Day${safe(classDetails.classDay)}.zip`
+        : 'lab_check_export.zip';
       link.download = fileName;
       link.click();
+      URL.revokeObjectURL(url);
     });
   };
 

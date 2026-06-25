@@ -21,10 +21,11 @@ const ClassDetails = () => {
   const handleChange = (setter, key) => event => {
     const { value } = event.target;
     setter(value);
-    localforage.getItem('classDetails').then(details => {
-      const newDetails = { ...details, [key]: value };
-      localforage.setItem('classDetails', newDetails);
-    });
+    // Persist from current component state (the single source of truth) rather
+    // than a read-modify-write against storage, so concurrent field edits
+    // cannot interleave and overwrite each other.
+    const newDetails = { className, classWeek, classDay, [key]: value };
+    localforage.setItem('classDetails', newDetails);
   };
 
   return (

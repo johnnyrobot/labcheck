@@ -14,8 +14,8 @@ server {
         add_header Cache-Control "public";
     }
 
-    # Service worker - no cache
-    location /sw.js {
+    # Service worker - no cache (exact match wins over the static-asset regex above)
+    location = /sw.js {
         expires -1;
         add_header Cache-Control "no-cache, no-store, must-revalidate";
     }

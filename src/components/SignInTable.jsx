@@ -28,10 +28,21 @@ const SignInTable = () => {
   const [currentStudent, setCurrentStudent] = useState(null);
 
   useEffect(() => {
-    localforage.getItem('students').then((data) => {
-      if (data) setStudents(data);
-    });
+    localforage
+      .getItem('students')
+      .then((data) => {
+        if (data) setStudents(data);
+      })
+      .catch((error) => {
+        console.error('Error loading students:', error);
+      });
   }, []);
+
+  const persistStudents = (next) => {
+    localforage.setItem('students', next).catch((error) => {
+      console.error('Error saving students:', error);
+    });
+  };
 
   const handleOpenSignInModal = () => setIsSignInModalOpen(true);
   const handleCloseSignInModal = () => setIsSignInModalOpen(false);
@@ -54,9 +65,14 @@ const SignInTable = () => {
   };
 
   const handleSignIn = (studentData) => {
-    const newStudents = [...students, studentData];
+    // Update in place if this student already has a record so each id stays
+    // unique (and the table's key={student.id} never collides).
+    const exists = students.some((s) => s.id === studentData.id);
+    const newStudents = exists
+      ? students.map((s) => (s.id === studentData.id ? studentData : s))
+      : [...students, studentData];
     setStudents(newStudents);
-    localforage.setItem('students', newStudents);
+    persistStudents(newStudents);
   };
 
   const handleSignOut = (studentData) => {
@@ -64,7 +80,7 @@ const SignInTable = () => {
       s.id === studentData.id ? studentData : s
     );
     setStudents(newStudents);
-    localforage.setItem('students', newStudents);
+    persistStudents(newStudents);
   };
 
   return (

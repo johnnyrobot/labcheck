@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -16,6 +24,7 @@ const StudentDashboard = () => {
   const [isSignOutModalOpen, setIsSignOutModalOpen] = useState(false);
   const [isSignOutConfirmOpen, setIsSignOutConfirmOpen] = useState(false);
   const [viewMode, setViewMode] = useState('card');
+  const [isHydrated, setIsHydrated] = useState(false);
 
   useEffect(() => {
     loadData();
@@ -25,11 +34,13 @@ const StudentDashboard = () => {
     try {
       const rosterData = await localforage.getItem('studentRoster') || [];
       const studentsData = await localforage.getItem('students') || [];
-      
+
       setRoster(rosterData);
       setSignedInStudents(studentsData);
     } catch (error) {
       console.error('Error loading data:', error);
+    } finally {
+      setIsHydrated(true);
     }
   };
 
@@ -55,20 +66,28 @@ const StudentDashboard = () => {
     }
   };
 
-  const handleSignIn = (studentData) => {
+  const handleSignIn = async (studentData) => {
     const newStudents = [...signedInStudents, studentData];
     setSignedInStudents(newStudents);
-    localforage.setItem('students', newStudents);
+    try {
+      await localforage.setItem('students', newStudents);
+    } catch (error) {
+      console.error('Error saving sign-in:', error);
+    }
     setIsSignInModalOpen(false);
     setSelectedStudent(null);
   };
 
-  const handleSignOut = (studentData) => {
+  const handleSignOut = async (studentData) => {
     const newStudents = signedInStudents.map(s =>
       s.id === studentData.id ? studentData : s
     );
     setSignedInStudents(newStudents);
-    localforage.setItem('students', newStudents);
+    try {
+      await localforage.setItem('students', newStudents);
+    } catch (error) {
+      console.error('Error saving sign-out:', error);
+    }
     setIsSignOutModalOpen(false);
     setSelectedStudent(null);
   };
@@ -121,6 +140,11 @@ const StudentDashboard = () => {
     }
   };
 
+  // Avoid flashing the empty state before stored data has been loaded.
+  if (!isHydrated) {
+    return null;
+  }
+
   if (roster.length === 0) {
     return (
       <div className="text-center py-12">
@@ -144,16 +168,16 @@ const StudentDashboard = () => {
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <Button 
-            variant={viewMode === 'list' ? 'secondary' : 'outline'} 
+          <Button
+            variant={viewMode === 'card' ? 'secondary' : 'outline'}
             size="sm"
             onClick={() => setViewMode('card')}
           >
             <Grid className="h-4 w-4 mr-2" />
             Card View
           </Button>
-          <Button 
-            variant={viewMode === 'card' ? 'secondary' : 'outline'} 
+          <Button
+            variant={viewMode === 'list' ? 'secondary' : 'outline'}
             size="sm"
             onClick={() => setViewMode('list')}
           >
@@ -312,29 +336,32 @@ const StudentDashboard = () => {
       )}
 
       {/* Sign Out Confirmation Modal */}
-      {selectedStudent && isSignOutConfirmOpen && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <Card className="w-full max-w-md mx-4 bg-white">
-            <CardHeader>
-              <CardTitle>Confirm Sign Out</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <p>Are you sure you want to sign out {selectedStudent.name}?</p>
-              <div className="flex gap-2 justify-end">
-                <Button variant="outline" onClick={handleCloseModals}>
-                  Cancel
-                </Button>
-                <Button 
-                  variant="destructive"
-                  className="bg-red-600 text-white hover:bg-red-700"
-                  onClick={handleConfirmSignOut}
-                >
-                  Sign Out
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+      {selectedStudent && (
+        <Dialog
+          open={isSignOutConfirmOpen}
+          onOpenChange={(o) => !o && handleCloseModals()}
+        >
+          <DialogContent className="sm:max-w-md">
+            <DialogHeader>
+              <DialogTitle>Confirm Sign Out</DialogTitle>
+              <DialogDescription>
+                Are you sure you want to sign out {selectedStudent.name}?
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter>
+              <Button variant="outline" onClick={handleCloseModals}>
+                Cancel
+              </Button>
+              <Button
+                variant="destructive"
+                className="bg-red-600 text-white hover:bg-red-700"
+                onClick={handleConfirmSignOut}
+              >
+                Sign Out
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       )}
 
       {/* Sign Out Modal */}

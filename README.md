@@ -40,7 +40,7 @@ A beautiful, modern Progressive Web App (PWA) for student sign-in and attendance
 ## 🚀 Quick Start
 
 ### Prerequisites
-- Node.js 18+ 
+- Node.js 20.19+ (or 22.12+)
 - npm or yarn
 - Docker (optional, for containerized deployment)
 
@@ -48,7 +48,7 @@ A beautiful, modern Progressive Web App (PWA) for student sign-in and attendance
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/labcheck.git
+   git clone https://github.com/johnnyrobot/labcheck.git
    cd labcheck
    ```
 
@@ -242,7 +242,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 If you encounter any issues or have questions:
 
-1. Check the [Issues](https://github.com/yourusername/labcheck/issues) page
+1. Check the [Issues](https://github.com/johnnyrobot/labcheck/issues) page
 2. Create a new issue with detailed information
 3. Include screenshots and error messages when possible
 
