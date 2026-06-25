@@ -31,3 +31,6 @@ docs/
 *.njsproj
 *.sln
 *.sw?
+
+# Playwright MCP output
+.playwright-mcp/

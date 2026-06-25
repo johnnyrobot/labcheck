@@ -2,6 +2,8 @@
 
 A beautiful, modern Progressive Web App (PWA) for student sign-in and attendance tracking, built with React, shadcn/ui, and Tailwind CSS.
 
+![LabCheck — student dashboard](assets/screenshot.png)
+
 ## ✨ Features
 
 ### 🎨 Modern Design
