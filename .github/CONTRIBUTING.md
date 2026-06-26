@@ -7,7 +7,8 @@ the project, the standards we follow, and how to propose changes.
 
 This project is governed by our [Code of Conduct](CODE_OF_CONDUCT.md). By
 participating, you are expected to uphold it. Please report unacceptable
-behavior to **the project maintainer**.
+behavior through the channel described in the
+[Code of Conduct](CODE_OF_CONDUCT.md).
 
 ## Project overview
 

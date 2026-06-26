@@ -22,12 +22,10 @@ build, its dependencies, and the device the app runs on.
 
 **Please do not report security vulnerabilities through public GitHub issues.**
 
-Instead, use one of the following private channels:
-
-1. **GitHub Private Vulnerability Reporting** (preferred) — open the
-   [Security tab](https://github.com/johnnyrobot/labcheck/security/advisories/new)
-   and submit a report. This keeps the details private until a fix is available.
-2. **Email** — send details to **the project maintainer**.
+Instead, please report them privately through **GitHub Private Vulnerability
+Reporting**: open the
+[Security advisories page](https://github.com/johnnyrobot/labcheck/security/advisories/new)
+and submit a report. This keeps the details private until a fix is available.
 
 Please include:
 
