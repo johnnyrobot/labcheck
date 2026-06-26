@@ -71,15 +71,21 @@ A beautiful, modern Progressive Web App (PWA) for student sign-in and attendance
 
 #### Using Docker
 
-1. **Build and run with Docker Compose**
+1. **Build the image**
    ```bash
-   docker-compose up -d
+   docker build -t labcheck .
    ```
 
-2. **Access the application**
+2. **Run it, publishing the container's port 80 to a host port**
+   ```bash
+   docker run -p 8080:80 labcheck
    ```
-   http://localhost:1738
-   ```
+
+3. **Access the application** at <http://localhost:8080>
+
+> The included `docker-compose.yml` is a **Traefik-based production example**
+> (TLS via Let's Encrypt, host-routing). Edit the `Host(...)` rule and labels for
+> your own domain before deploying with `docker-compose up -d`.
 
 #### Manual Build
 
@@ -147,7 +153,7 @@ Jane Smith,67890
 - **LocalForage** - Improved local storage
 
 ### Development & Deployment
-- **TypeScript** - Type safety (optional)
+- **Vitest** - Unit testing (Testing Library + jsdom)
 - **ESLint** - Code linting
 - **Docker** - Containerization
 - **Nginx** - Production web server
